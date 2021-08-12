@@ -1,0 +1,116 @@
+import {Component} from 'react'
+import UserProfile from './components/UserProfile'
+
+import './App.css'
+
+const initialUserDetailsList = [
+  {
+    uniqueNo: 1,
+    imageUrl: 'https://assets.ccbp.in/frontend/react-js/esther-howard-img.png',
+    name: 'Esther Howard',
+    role: 'Software Developer',
+  },
+  {
+    uniqueNo: 2,
+    imageUrl: 'https://assets.ccbp.in/frontend/react-js/floyd-miles-img.png',
+    name: 'Floyd Miles',
+    role: 'Software Developer',
+  },
+  {
+    uniqueNo: 3,
+    imageUrl: 'https://assets.ccbp.in/frontend/react-js/jacob-jones-img.png',
+    name: 'Jacob Jones',
+    role: 'Software Developer',
+  },
+  {
+    uniqueNo: 4,
+    imageUrl: 'https://assets.ccbp.in/frontend/react-js/devon-lane-img.png',
+    name: 'Devon Lane',
+    role: 'Software Developer',
+  },
+]
+
+class App extends Component {
+  state = {searchInput: '', userDetailsList: initialUserDetailsList}
+
+  onChangeSearchInput = event => {
+    this.setState({searchInput: event.target.value})
+  }
+
+  onDeleteUser = uniqueNo => {
+    const {userDetailsList} = this.state
+    const filteredUserData = userDetailsList.filter(
+      eachUser => eachUser.uniqueNo !== uniqueNo,
+    )
+    this.setState({userDetailsList: filteredUserData})
+  }
+
+  render() {
+    const {searchInput, userDetailsList} = this.state
+    console.log(searchInput)
+    const searchResults = userDetailsList.filter(eachUser =>
+      eachUser.name.includes(searchInput),
+    )
+
+    return (
+      <div className="app-container">
+        <h1 className="title">Users List</h1>
+        <input
+          type="search"
+          value={searchInput}
+          onChange={this.onChangeSearchInput}
+        />
+        <ul className="list-container">
+          {searchResults.map(eachUser => (
+            <UserProfile
+              onDeleteUser={this.onDeleteUser}
+              userDetails={eachUser}
+              key={eachUser.uniqueNo}
+            />
+          ))}
+        </ul>
+      </div>
+    )
+  }
+}
+
+export default App
+
+
+
+----------------------------------------------------------------------------------------------
+
+
+import './index.css'
+
+const UserProfile = props => {
+  const {userDetails, onDeleteUser} = props
+  const {imageUrl, name, role, uniqueNo} = userDetails
+
+  const onDelete = () => {
+    onDeleteUser(uniqueNo)
+  }
+
+  return (
+    <li className="user-card-container">
+      <img src={imageUrl} className="profile-pic" alt="profile-pic" />
+      <div className="user-details-container">
+        <h1 className="user-name"> {name} </h1>
+        <p className="user-designation"> {role} </p>
+      </div>
+      <button className="delete-button" type="button" onClick={onDelete}>
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/cross-img.png"
+          className="delete-img"
+          alt="cross"
+        />
+      </button>
+    </li>
+  )
+}
+export default UserProfile
+
+
+
+
+
